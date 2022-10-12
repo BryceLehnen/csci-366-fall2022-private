@@ -1,5 +1,3 @@
-;; TODO - implement counting up from 1 to 10
-;; in MIPS assembly, code only
 .text
 
 main:
