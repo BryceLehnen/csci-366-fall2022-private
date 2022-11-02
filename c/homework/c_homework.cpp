@@ -4,6 +4,28 @@ char * print_binary_representation(unsigned int i, char *buffer){
     buffer[0] = '0';
     buffer[1] = 'b';
     // fill out remaining 32 bits, 1 or 0 depending on the value in the number i
+    // Exception if 'i' is all 1's aka UINT32_MAX
+    if (i == UINT32_MAX) {
+        for (int bit = 2; bit < 34; bit++) {
+            buffer[bit] = '1';
+        }
+        return buffer;
+    }
+
+    // If 'i' is not UINT32_MAX
+    unsigned int mask = 1;
+    mask = mask << 31; // Shifting mask over 32 bits
+    for (int bit = 2; bit < 34; bit++) {
+        if (mask & i) {
+            buffer[bit] = '1';
+        }
+        else {
+            buffer[bit] = '0';
+        }
+
+        mask = mask >> 1; // Shifting mask over 1 bit
+    }
+
     return buffer;
 }
 
