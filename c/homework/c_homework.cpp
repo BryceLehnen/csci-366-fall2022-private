@@ -59,14 +59,15 @@ struct Person {
     int age;
 };
 
-void set_my_age(struct Person p) {
-    p.age = 44;
+void set_my_age(struct Person* p) {
+    p->age = 44;
 }
 
 int get_my_age() {
     struct Person me;
+    struct Person* pointer = &me;
     me.name = "Carson";
-    set_my_age(me);
+    set_my_age(pointer);
     return me.age;
 }
 
