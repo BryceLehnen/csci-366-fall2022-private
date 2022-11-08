@@ -36,6 +36,11 @@ void lmsm_i_pop(lmsm *our_little_machine) {
 }
 
 void lmsm_i_dup(lmsm *our_little_machine) {
+    lmsm_stack *current = our_little_machine->accumulator;
+    lmsm_stack *new = malloc(sizeof(lmsm_stack));
+    new->value = current->value;
+    new->next = current;
+    our_little_machine->accumulator = new;
 }
 
 int check_stack(lmsm *our_little_machine) {
@@ -182,6 +187,8 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_push(our_little_machine);
     } else if (921 == instruction) {
         lmsm_i_pop(our_little_machine);
+    } else if (922 == instruction) {
+        lmsm_i_dup(our_little_machine);
     } else {
         our_little_machine->error_code = ERROR_UNKNOWN_INSTRUCTION;
         our_little_machine->status = STATUS_HALTED;
