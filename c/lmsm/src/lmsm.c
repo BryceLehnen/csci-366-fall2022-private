@@ -198,6 +198,16 @@ void lmsm_i_out(lmsm *our_little_machine) {
 }
 
 void lmsm_i_inp(lmsm *our_little_machine) {
+    lmsm_stack *current = our_little_machine->accumulator;
+    int i = 1000;
+    printf("Enter a value (-999 - 999): ");
+    scanf("%d", &i);
+    if (i >= -999 && i <= 999) {
+        current->value = i;
+    }
+    else {
+        our_little_machine->status = STATUS_HALTED;
+    }
 }
 
 void lmsm_i_load(lmsm *our_little_machine, int location) {
@@ -285,6 +295,8 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_branch_if_zero(our_little_machine, instruction - 700);
     } else if (800 <= instruction && instruction <=899) {
         lmsm_i_branch_if_positive(our_little_machine, instruction - 800);
+    } else if (901 == instruction) {
+        lmsm_i_inp(our_little_machine);
     } else if (902 == instruction) {
         lmsm_i_out(our_little_machine);
     } else if (910 == instruction) {
