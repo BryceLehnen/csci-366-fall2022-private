@@ -10,9 +10,38 @@
 //======================================================
 
 void lmsm_i_call(lmsm *our_little_machine) {
+    lmsm_stack *current = our_little_machine->accumulator;
+    lmsm_stack *next = current->next;
+    lmsm_stack *callcurrent = our_little_machine->call_stack;
+    lmsm_stack *new = malloc(sizeof(lmsm_stack));
+
+    new->value = our_little_machine->program_counter;
+    new->next = callcurrent->next;
+    our_little_machine->call_stack = new;
+    our_little_machine->program_counter = current->value;
+
+    if (next == NULL) {
+        our_little_machine->error_code = ERROR_EMPTY_STACK;
+        our_little_machine->status = STATUS_HALTED;
+    }
+    else {
+        our_little_machine->accumulator = next;
+        free(current);
+    }
 }
 
 void lmsm_i_return(lmsm *our_little_machine) {
+    lmsm_stack *callcurrent = our_little_machine->call_stack;
+    lmsm_stack *callnext = callcurrent->next;
+
+    if (callnext == NULL) {
+        our_little_machine->call_stack->value = 0;
+        our_little_machine->call_stack->next = NULL;
+    }
+    else {
+        our_little_machine->call_stack = callnext;
+    }
+    our_little_machine->program_counter = callcurrent->value;
 }
 
 void lmsm_i_push(lmsm *our_little_machine) {
@@ -254,6 +283,10 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_branch_if_positive(our_little_machine, instruction - 800);
     } else if (902 == instruction) {
         lmsm_i_out(our_little_machine);
+    } else if (910 == instruction) {
+        lmsm_i_call(our_little_machine);
+    } else if (911 == instruction) {
+        lmsm_i_return(our_little_machine);
     } else if (920 == instruction) {
         lmsm_i_push(our_little_machine);
     } else if (921 == instruction) {
