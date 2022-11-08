@@ -91,6 +91,23 @@ void lmsm_i_ssub(lmsm *our_little_machine) {
 }
 
 void lmsm_i_smax(lmsm *our_little_machine) {
+    if (!check_stack(our_little_machine)) {
+        return;
+    }
+    lmsm_stack *current = our_little_machine->accumulator;
+    lmsm_stack *next = current->next;
+    lmsm_stack *new = malloc(sizeof(lmsm_stack));
+    if (current->value >= next->value) {
+        new->value = current->value;
+    }
+    else {
+        new->value = next->value;
+    }
+    new->next = next->next;
+    our_little_machine->accumulator = new;
+
+    free(current);
+    free(next);
 }
 
 void lmsm_i_smin(lmsm *our_little_machine) {
@@ -206,6 +223,8 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_sadd(our_little_machine);
     } else if (924 == instruction) {
         lmsm_i_ssub(our_little_machine);
+    } else if (926 == instruction) {
+        lmsm_i_smax(our_little_machine);
     } else {
         our_little_machine->error_code = ERROR_UNKNOWN_INSTRUCTION;
         our_little_machine->status = STATUS_HALTED;
