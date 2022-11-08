@@ -26,7 +26,13 @@ void lmsm_i_push(lmsm *our_little_machine) {
 void lmsm_i_pop(lmsm *our_little_machine) {
     lmsm_stack *current = our_little_machine->accumulator;
     lmsm_stack *next = current->next;
-    our_little_machine->accumulator = next;
+    if (next == NULL) {
+        our_little_machine->error_code = ERROR_EMPTY_STACK;
+        our_little_machine->status = STATUS_HALTED;
+    }
+    else {
+        our_little_machine->accumulator = next;
+    }
 }
 
 void lmsm_i_dup(lmsm *our_little_machine) {
