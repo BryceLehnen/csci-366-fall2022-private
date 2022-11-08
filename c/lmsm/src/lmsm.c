@@ -34,6 +34,7 @@ void lmsm_i_return(lmsm *our_little_machine) {
     lmsm_stack *callcurrent = our_little_machine->call_stack;
     lmsm_stack *callnext = callcurrent->next;
 
+    our_little_machine->program_counter = callcurrent->value;
     if (callnext == NULL) {
         our_little_machine->call_stack->value = 0;
         our_little_machine->call_stack->next = NULL;
@@ -41,7 +42,6 @@ void lmsm_i_return(lmsm *our_little_machine) {
     else {
         our_little_machine->call_stack = callnext;
     }
-    our_little_machine->program_counter = callcurrent->value;
 }
 
 void lmsm_i_push(lmsm *our_little_machine) {
@@ -190,7 +190,11 @@ void lmsm_i_sdiv(lmsm *our_little_machine) {
 }
 
 void lmsm_i_out(lmsm *our_little_machine) {
-    our_little_machine->output_buffer[0] += our_little_machine->accumulator->value;
+    char *out = our_little_machine->output_buffer;
+    int i = our_little_machine->accumulator->value;
+    char c[10];
+    sprintf(c, "%d ", i);
+    strncat(out, c, sizeof(c));
 }
 
 void lmsm_i_inp(lmsm *our_little_machine) {
