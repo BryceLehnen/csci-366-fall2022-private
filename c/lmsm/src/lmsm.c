@@ -16,6 +16,11 @@ void lmsm_i_return(lmsm *our_little_machine) {
 }
 
 void lmsm_i_push(lmsm *our_little_machine) {
+    lmsm_stack *current = our_little_machine->accumulator;
+    lmsm_stack *new = malloc(sizeof(lmsm_stack));
+    new->value = 0;
+    new->next = current;
+    our_little_machine->accumulator = new;
 }
 
 void lmsm_i_pop(lmsm *our_little_machine) {
@@ -84,6 +89,7 @@ void lmsm_i_add(lmsm *our_little_machine, int location) {
 }
 
 void lmsm_i_sub(lmsm *our_little_machine, int location) {
+    our_little_machine->accumulator->value -= our_little_machine->memory[location];
 }
 
 void lmsm_i_load_immediate(lmsm *our_little_machine, int value) {
@@ -108,6 +114,12 @@ void lmsm_cap_accumulator_value(lmsm *our_little_machine){
 }
 
 void lmsm_step(lmsm *our_little_machine) {
+    if (our_little_machine->status != STATUS_HALTED) {
+        int next_instruction = our_little_machine->memory[our_little_machine->program_counter];
+        our_little_machine->program_counter++;
+        our_little_machine->current_instruction = next_instruction;
+        lmsm_exec_instruction(our_little_machine, next_instruction);
+    }
 }
 
 //======================================================
@@ -123,6 +135,10 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_halt(our_little_machine);
     } else if (100 <= instruction && instruction <= 199) {
         lmsm_i_add(our_little_machine, instruction - 100);
+    } else if (200 <= instruction && instruction <= 299) {
+        lmsm_i_sub(our_little_machine, instruction - 200);
+    } else if (920 == instruction) {
+        lmsm_i_push(our_little_machine);
     } else {
         our_little_machine->error_code = ERROR_UNKNOWN_INSTRUCTION;
         our_little_machine->status = STATUS_HALTED;
