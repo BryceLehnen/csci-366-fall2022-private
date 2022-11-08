@@ -101,6 +101,7 @@ void lmsm_i_store(lmsm *our_little_machine, int location) {
 }
 
 void lmsm_i_halt(lmsm *our_little_machine) {
+    our_little_machine->status = STATUS_HALTED;
 }
 
 void lmsm_i_branch_unconditional(lmsm *our_little_machine, int location) {
