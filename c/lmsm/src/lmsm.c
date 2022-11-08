@@ -206,6 +206,7 @@ void lmsm_i_inp(lmsm *our_little_machine) {
         current->value = i;
     }
     else {
+        our_little_machine->error_code = ERROR_UNKNOWN_INSTRUCTION;
         our_little_machine->status = STATUS_HALTED;
     }
 }
