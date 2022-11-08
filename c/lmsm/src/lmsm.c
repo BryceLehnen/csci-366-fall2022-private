@@ -82,6 +82,7 @@ void lmsm_i_inp(lmsm *our_little_machine) {
 }
 
 void lmsm_i_load(lmsm *our_little_machine, int location) {
+    our_little_machine->accumulator->value = our_little_machine->memory[location];
 }
 
 void lmsm_i_add(lmsm *our_little_machine, int location) {
@@ -96,6 +97,7 @@ void lmsm_i_load_immediate(lmsm *our_little_machine, int value) {
 }
 
 void lmsm_i_store(lmsm *our_little_machine, int location) {
+    our_little_machine->memory[location] = our_little_machine->accumulator->value;
 }
 
 void lmsm_i_halt(lmsm *our_little_machine) {
@@ -143,6 +145,10 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_add(our_little_machine, instruction - 100);
     } else if (200 <= instruction && instruction <= 299) {
         lmsm_i_sub(our_little_machine, instruction - 200);
+    } else if (300 <= instruction && instruction <= 399) {
+        lmsm_i_store(our_little_machine, instruction - 300);
+    } else if (500 <= instruction && instruction <= 599) {
+        lmsm_i_load(our_little_machine, instruction - 500);
     } else if (920 == instruction) {
         lmsm_i_push(our_little_machine);
     } else {
