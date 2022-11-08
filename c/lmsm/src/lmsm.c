@@ -76,6 +76,7 @@ void lmsm_i_sdiv(lmsm *our_little_machine) {
 }
 
 void lmsm_i_out(lmsm *our_little_machine) {
+    our_little_machine->output_buffer[0] += our_little_machine->accumulator->value;
 }
 
 void lmsm_i_inp(lmsm *our_little_machine) {
@@ -94,6 +95,7 @@ void lmsm_i_sub(lmsm *our_little_machine, int location) {
 }
 
 void lmsm_i_load_immediate(lmsm *our_little_machine, int value) {
+    our_little_machine->accumulator->value = value;
 }
 
 void lmsm_i_store(lmsm *our_little_machine, int location) {
@@ -155,6 +157,8 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_sub(our_little_machine, instruction - 200);
     } else if (300 <= instruction && instruction <= 399) {
         lmsm_i_store(our_little_machine, instruction - 300);
+    } else if (400 <= instruction && instruction <=499) {
+        lmsm_i_load_immediate(our_little_machine, instruction - 400);
     } else if (500 <= instruction && instruction <= 599) {
         lmsm_i_load(our_little_machine, instruction - 500);
     } else if (600 <= instruction && instruction <=699) {
@@ -163,6 +167,8 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_branch_if_zero(our_little_machine, instruction - 700);
     } else if (800 <= instruction && instruction <=899) {
         lmsm_i_branch_if_positive(our_little_machine, instruction - 800);
+    } else if (902 == instruction) {
+        lmsm_i_out(our_little_machine);
     } else if (920 == instruction) {
         lmsm_i_push(our_little_machine);
     } else {
