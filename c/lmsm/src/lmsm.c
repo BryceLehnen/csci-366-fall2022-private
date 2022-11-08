@@ -104,12 +104,19 @@ void lmsm_i_halt(lmsm *our_little_machine) {
 }
 
 void lmsm_i_branch_unconditional(lmsm *our_little_machine, int location) {
+    our_little_machine->program_counter = location;
 }
 
 void lmsm_i_branch_if_zero(lmsm *our_little_machine, int location) {
+    if (our_little_machine->accumulator->value == 0) {
+        our_little_machine->program_counter = location;
+    }
 }
 
 void lmsm_i_branch_if_positive(lmsm *our_little_machine, int location) {
+    if (our_little_machine->accumulator->value >= 0) {
+        our_little_machine->program_counter = location;
+    }
 }
 
 void lmsm_cap_accumulator_value(lmsm *our_little_machine){
@@ -149,6 +156,12 @@ void lmsm_exec_instruction(lmsm *our_little_machine, int instruction) {
         lmsm_i_store(our_little_machine, instruction - 300);
     } else if (500 <= instruction && instruction <= 599) {
         lmsm_i_load(our_little_machine, instruction - 500);
+    } else if (600 <= instruction && instruction <=699) {
+        lmsm_i_branch_unconditional(our_little_machine, instruction - 600);
+    } else if (700 <= instruction && instruction <=799) {
+        lmsm_i_branch_if_zero(our_little_machine, instruction - 700);
+    } else if (800 <= instruction && instruction <=899) {
+        lmsm_i_branch_if_positive(our_little_machine, instruction - 800);
     } else if (920 == instruction) {
         lmsm_i_push(our_little_machine);
     } else {
