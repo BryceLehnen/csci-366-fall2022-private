@@ -16,7 +16,7 @@ void lmsm_i_call(lmsm *our_little_machine) {
     lmsm_stack *new = malloc(sizeof(lmsm_stack));
 
     new->value = our_little_machine->program_counter;
-    new->next = callcurrent->next;
+    new->next = callcurrent;
     our_little_machine->call_stack = new;
     our_little_machine->program_counter = current->value;
 
@@ -42,6 +42,8 @@ void lmsm_i_return(lmsm *our_little_machine) {
     else {
         our_little_machine->call_stack = callnext;
     }
+
+    free(callcurrent);
 }
 
 void lmsm_i_push(lmsm *our_little_machine) {
