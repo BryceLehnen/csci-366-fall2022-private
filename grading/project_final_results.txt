@@ -51,7 +51,7 @@ Expected: false
 Value of: result->root == nullptr
   Actual: true
 Expected: false
-[  FAILED  ] parsing_tests.label_is_parsed_correctly (0 ms)
+[  FAILED  ] parsing_tests.label_is_parsed_correctly (1 ms)
 [ RUN      ] parsing_tests.numeric_reference_works_for_branch
 /home/parallels/autograder/csci-366-fall2022/grading/scripts/repos/bryce_lehnen/c/lmsm/googletest/assembler.cpp:99: Failure
 Value of: result->root == nullptr
@@ -70,7 +70,7 @@ Expected equality of these values:
   result->error
     Which is: NULL
   ASM_ERROR_UNKNOWN_INSTRUCTION
-    Which is: 0xaaaabb49a1d8
+    Which is: 0xaaaadefea1d8
 [  FAILED  ] parsing_tests.unknown_instruction_is_handled (0 ms)
 [ RUN      ] parsing_tests.no_argument_for_instruction_causes_error
 /home/parallels/autograder/csci-366-fall2022/grading/scripts/repos/bryce_lehnen/c/lmsm/googletest/assembler.cpp:127: Failure
@@ -78,7 +78,7 @@ Expected equality of these values:
   result->error
     Which is: NULL
   ASM_ERROR_ARG_REQUIRED
-    Which is: 0xaaaabb49a1f0
+    Which is: 0xaaaadefea1f0
 [  FAILED  ] parsing_tests.no_argument_for_instruction_causes_error (0 ms)
 [ RUN      ] parsing_tests.numbers_out_of_machine_range_cause_error
 /home/parallels/autograder/csci-366-fall2022/grading/scripts/repos/bryce_lehnen/c/lmsm/googletest/assembler.cpp:134: Failure
@@ -86,7 +86,7 @@ Expected equality of these values:
   result->error
     Which is: NULL
   ASM_ERROR_OUT_OF_RANGE
-    Which is: 0xaaaabb49a218
+    Which is: 0xaaaadefea218
 [  FAILED  ] parsing_tests.numbers_out_of_machine_range_cause_error (0 ms)
 [ RUN      ] parsing_tests.negative_numbers_out_of_machine_range_are_capped_properly
 /home/parallels/autograder/csci-366-fall2022/grading/scripts/repos/bryce_lehnen/c/lmsm/googletest/assembler.cpp:141: Failure
@@ -94,9 +94,9 @@ Expected equality of these values:
   result->error
     Which is: NULL
   ASM_ERROR_OUT_OF_RANGE
-    Which is: 0xaaaabb49a218
+    Which is: 0xaaaadefea218
 [  FAILED  ] parsing_tests.negative_numbers_out_of_machine_range_are_capped_properly (0 ms)
-[----------] 10 tests from parsing_tests (0 ms total)
+[----------] 10 tests from parsing_tests (1 ms total)
 
 [----------] 28 tests from code_generation
 [ RUN      ] code_generation.add_instruction_generates_properly
@@ -224,7 +224,7 @@ Expected equality of these values:
   result->code[0]
     Which is: 0
   926
-[  FAILED  ] code_generation.smin_instruction_generates_properly (1 ms)
+[  FAILED  ] code_generation.smin_instruction_generates_properly (0 ms)
 [ RUN      ] code_generation.smul_instruction_generates_properly
 /home/parallels/autograder/csci-366-fall2022/grading/scripts/repos/bryce_lehnen/c/lmsm/googletest/assembler.cpp:395: Failure
 Expected equality of these values:
@@ -280,9 +280,9 @@ Expected equality of these values:
   result->error
     Which is: NULL
   ASM_ERROR_BAD_LABEL
-    Which is: 0xaaaabb49a208
+    Which is: 0xaaaadefea208
 [  FAILED  ] code_generation.bad_label_causes_error (0 ms)
-[----------] 28 tests from code_generation (1 ms total)
+[----------] 28 tests from code_generation (0 ms total)
 
 [----------] 1 test from end_to_end
 [ RUN      ] end_to_end.bootstrap
