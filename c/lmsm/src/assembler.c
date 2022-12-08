@@ -135,7 +135,7 @@ void asm_parse_src(compilation_result * result, char * original_src){
     // copy over so strtok can mutate
     char * src = calloc(strlen(original_src) + 1, sizeof(char));
     strcat(src, original_src);
-    /*
+
     instruction * last_instruction = NULL;
     instruction * current_instruction = NULL;
 
@@ -181,7 +181,7 @@ void asm_parse_src(compilation_result * result, char * original_src){
 
         token = strtok(NULL, " \n");
     }
-    */
+
     //TODO - generate a linked list of instructions and store the first into
     //       the result->root
     //
