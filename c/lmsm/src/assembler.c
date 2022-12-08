@@ -245,6 +245,13 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
         result->code[instruction->offset] = 928;
     } else if (strcmp("DAT", instruction->instruction) == 0) {
         result->code[instruction->offset] = value_for_instruction;
+    } else if (strcmp("SPUSHI", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 920;
+        result->code[instruction->offset + 1] = 401;
+    } else if (strcmp("CALL", instruction->instruction) == 0) {
+        result->code[instruction->offset] = 920;
+        result->code[instruction->offset + 1] = 401;
+        result->code[instruction->offset + 2] = 910;
     } else {
         result->code[instruction->offset] = 0;
     }
