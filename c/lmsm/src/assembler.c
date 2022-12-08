@@ -53,6 +53,17 @@ instruction * asm_make_instruction(char* type, char *label, char *label_referenc
     }
     // TODO fill in # of slots
     // All instructions are 1 expect call(3) and spushi(2)
+    if (strcmp("CALL", type) == 0) {
+        new_instruction->slots = 3;
+    }
+    else if (strcmp("SPUSHI", type) == 0) {
+        new_instruction->slots = 2;
+    }
+    else {
+        new_instruction->slots = 1;
+    }
+
+
 
     return new_instruction;
 }
@@ -201,6 +212,10 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
     int value_for_instruction = instruction->value;
     if(instruction->label_reference) {
         value_for_instruction = asm_find_label(result->root, instruction->label_reference);
+        if (value_for_instruction = -1) {
+            result->error = ASM_ERROR_BAD_LABEL;
+        }
+
     }
 
     if (strcmp("ADD", instruction->instruction) == 0) {
@@ -255,8 +270,6 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
     } else {
         result->code[instruction->offset] = 0;
     }
-
-    // SPUSHI and Call are special here
 
 }
 
