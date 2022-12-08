@@ -51,6 +51,8 @@ instruction * asm_make_instruction(char* type, char *label, char *label_referenc
     } else {
         new_instruction->offset = 0;
     }
+    // TODO fill in # of slots
+    // All instructions are 1 expect call(3) and spushi(2)
 
     return new_instruction;
 }
@@ -126,6 +128,49 @@ void asm_parse_src(compilation_result * result, char * original_src){
     instruction * last_instruction = NULL;
     instruction * current_instruction = NULL;
 
+    char *token = strtok(src, " \n");
+    while(token != NULL) {
+
+        char *label = NULL;
+        char *instruction = NULL;
+
+        // If it starts with a label, then instruction
+        if(!asm_is_instruction(token)) {
+            label = token;
+            token = strtok(NULL, " \n");
+            instruction = token;
+
+        }
+
+        // Checks if an instruction exists
+        if(!asm_is_instruction(token)) {
+            result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;
+            return;
+        }
+        else {
+            instruction = token;
+        }
+
+        // If instruction has or needs argument; possibly label
+        int value = 0;
+        char *label_reference = NULL;
+        if (asm_instruction_requires_arg(instruction)) {
+            token = strtok(NULL, " \n");
+            // Check if num or label
+            asm_is_num(token);
+        }
+
+        current_instruction = asm_make_instruction(instruction, ...);
+
+        if (result->root == NULL) {
+            result->root = current_instruction;
+        }
+
+        // LAST INSTRUCTION TO CREATE LINKED LIST W/ current_instruction
+
+        token = strtok(NULL, " \n");
+    }
+
     //TODO - generate a linked list of instructions and store the first into
     //       the result->root
     //
@@ -154,11 +199,17 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
 
 
     int value_for_instruction = instruction->value;
+    if(instruction->label_reference) {
+        value_for_instruction = asm_find_label(result->root, instruction->label_reference);
+    }
+
     if (strcmp("ADD", instruction->instruction) == 0) {
         result->code[instruction->offset] = 100 + value_for_instruction;
     } else {
         result->code[instruction->offset] = 0;
     }
+
+    // SPUSHI and Call are special here
 
 }
 
