@@ -143,18 +143,16 @@ void asm_parse_src(compilation_result * result, char * original_src){
     while(token != NULL) {
 
         char *label = NULL;
-        char *instruction = NULL;
 
-        // If it starts with a label, then instruction
-        if(!asm_is_instruction(token)) {
+        // First check for label
+        if (!asm_is_instruction(token)) {
             label = token;
             token = strtok(NULL, " \n");
-            instruction = token;
-
         }
 
-        // Checks if an instruction exists
-        if(!asm_is_instruction(token)) {
+        // If label exists, has chance to find error if the next is NOT an instruction
+        char *instruction = NULL;
+        if (!asm_is_instruction(token)) {
             result->error = ASM_ERROR_UNKNOWN_INSTRUCTION;
             return;
         }
@@ -162,23 +160,51 @@ void asm_parse_src(compilation_result * result, char * original_src){
             instruction = token;
         }
 
-        // If instruction has or needs argument; possibly label
+        // If instruction needs argument with it
+        // Also can handle if there is a label_reference
         int value = 0;
         char *label_reference = NULL;
         if (asm_instruction_requires_arg(instruction)) {
             token = strtok(NULL, " \n");
+
+            // Check for bad or no arg
+            if (token == NULL) {
+                result->error = ASM_ERROR_ARG_REQUIRED;
+                return;
+            }
+
             // Check if num or label
-            asm_is_num(token);
+            if (asm_is_num(token)) {
+                value = atoi(token);
+                if (strcmp("DAT", instruction) == 0) {
+                    if (value < -999 || value > 999) {
+                        result->error = ASM_ERROR_OUT_OF_RANGE;
+                        return;
+                    }
+                }
+                else if (value < -99 || value > 99) {
+                    result->error = ASM_ERROR_OUT_OF_RANGE;
+                    return;
+                }
+            }
+            else {
+                label_reference = token;
+                if (asm_is_instruction(label_reference)) {
+                    result->error = ASM_ERROR_BAD_LABEL;
+                    return;
+                }
+            }
         }
 
-        //current_instruction = asm_make_instruction(instruction, ...);
+        current_instruction = asm_make_instruction(instruction, label, label_reference, value, last_instruction);
 
+        // Set root if not already
         if (result->root == NULL) {
             result->root = current_instruction;
         }
 
-        // LAST INSTRUCTION TO CREATE LINKED LIST W/ current_instruction
-
+        // Set last instruction and grab new token to check in while loop
+        last_instruction = current_instruction;
         token = strtok(NULL, " \n");
     }
 
