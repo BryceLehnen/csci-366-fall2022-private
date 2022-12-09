@@ -122,6 +122,22 @@ int asm_is_num(char * token){
 
 int asm_find_label(instruction *root, char *label) {
     // TODO - scan the linked list for the given label, return -1 if not found
+
+    instruction *temp = root;
+    int location = 0; // Place in memory where its found
+    while (temp != NULL) {
+
+        char* checklabel = temp->label;
+        if (checklabel == NULL) {
+            location++;
+        }
+        else if (strcmp(label, checklabel) == 0) {
+            return location;
+        }
+
+        temp = temp->next;
+    }
+
     return -1;
 }
 
@@ -238,10 +254,9 @@ void asm_gen_code_for_instruction(compilation_result  * result, instruction *ins
     int value_for_instruction = instruction->value;
     if(instruction->label_reference) {
         value_for_instruction = asm_find_label(result->root, instruction->label_reference);
-        if (value_for_instruction = -1) {
+        if (value_for_instruction == -1) {
             result->error = ASM_ERROR_BAD_LABEL;
         }
-
     }
 
     if (strcmp("ADD", instruction->instruction) == 0) {
